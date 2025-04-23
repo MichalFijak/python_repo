@@ -1,19 +1,17 @@
 import pyodbc
-
+import json
 
 def create_connection(db_parameters:list[str]):
     conn = None
+    connection_string = f"""DRIVER={db_parameters['DRIVER']};SERVER={db_parameters['SERVER']};
+                          DATABASE={db_parameters['DATABASE']};Trusted_Connection={db_parameters['Trusted_Connection']};"""
     try:
-        conn = pyodbc.connect("DRIVER={ODBC Driver 17 for SQL Server};SERVER=DESKTOP-6U6QGK9\\SQLEXPRESS;DATABASE=python_database;Trusted_Connection=yes;")
+        conn = pyodbc.connect(connection_string)
         print("Connected to MySQL database")
     except pyodbc.Error as e:
         print(e)
     return conn
 
-table_name="employees"
-condition="id=1"
-column_name="salary"
-new_value="50000"
 
 def get_table_data(conn, table_name:str):
     """ get data from a table in the database """
@@ -40,6 +38,7 @@ def get_user_data(conn, table_name:str, condition:str):
         print(e)
     finally:
         cursor.close()
+        return rows
 
 
 def update_table(conn, table_name:str, column_name:str, new_value:str, condition:str):
@@ -67,19 +66,17 @@ def update_table(conn, table_name:str, column_name:str, new_value:str, condition
 #     finally:
 #         cursor.close()
 
+
+
 if __name__ == "__main__":
-    db_parameters = [
-    "DESKTOP-6U6QGK9\\SQLEXPRESS",
-    "python_database"]
-    conn = create_connection(db_parameters)
+    with open('python_repo\enviroment\enviroment.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        conn = create_connection(data)
+
     if conn:
-        data=get_user_data(conn, table_name, condition)
+        data=get_user_data(conn, "employees", "id=1")
         if(data != None):
-            update_table(conn, table_name, column_name, new_value, condition)
-        # else:
-            # create_user_data(conn, table_name, column_name, new_value, condition)
-        data=get_table_data(conn, table_name)
-        print(data)
+            print(data)
         conn.close()
         print("Connection closed")
     else:

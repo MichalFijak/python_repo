@@ -1,0 +1,8 @@
+{
+
+    "DRIVER": "ODB Drivers",
+    "SERVER": "youServer",
+    "DATABASE": "dbname",
+    "Trusted_Connection": "yes"
+
+}
