@@ -1,8 +1,8 @@
 {
 
-    "DRIVER": "ODB Drivers",
-    "SERVER": "youServer",
-    "DATABASE": "dbname",
+    "DRIVER": "{ODBC Driver 17 for SQL Server}",
+    "SERVER": "DESKTOP-EC2NSK8\\SQLEXPRESS",
+    "DATABASE": "python_database",
     "Trusted_Connection": "yes"
 
 }
