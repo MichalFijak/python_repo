@@ -1,5 +1,8 @@
+import os
+import sys
 import pyodbc
-
+from models.employee import Employee
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def _create_connection(db_parameters:list[str]):
     conn = None
@@ -34,11 +37,17 @@ def get_table_data(conn_string, table_name:str):
         sql = f"SELECT * FROM {table_name}"
         cursor.execute(sql)
         rows = cursor.fetchall()
+
+        employees = [
+            Employee(row[0],row[1],row[2],row[3])
+            for row in rows
+        ]
     except pyodbc.Error as e:
         print(e)
+        employees=[]
     finally:
         cursor.close()
-        return rows
+        return employees
 
 def get_user_data(conn, table_name:str, condition:str):
     """ get data from a table in the database """

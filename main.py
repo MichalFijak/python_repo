@@ -5,5 +5,6 @@ import json
 if __name__ == "__main__":
     with open('python_repo\enviroment\enviroment.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
-    table=db.get_table_data(data,"employees")
-    print(table)
+    employees=db.get_table_data(data,"employees")
+    for employee in employees:
+        print(employee)
