@@ -1,10 +1,10 @@
-import os
-import sys
+import json
 import pyodbc
 from models.employee import Employee
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-def _create_connection(db_parameters:list[str]):
+def _create_connection():
+    with open('python_repo\enviroment\enviroment.json', 'r', encoding='utf-8') as file:
+        db_parameters = json.load(file)
     conn = None
     connection_string = f"""DRIVER={db_parameters['DRIVER']};SERVER={db_parameters['SERVER']};
                           DATABASE={db_parameters['DATABASE']};Trusted_Connection={db_parameters['Trusted_Connection']};"""
@@ -15,26 +15,26 @@ def _create_connection(db_parameters:list[str]):
         print(e)
     return conn
 
-def update_table(conn, table_name:str, column_name:str, new_value:str, condition:str):
+def update_table(sql:str, new_values:list):
     """ update a table in the database """
     try:
+        conn=_create_connection()
         cursor = conn.cursor()
-        sql = f"UPDATE {table_name} SET {column_name} = ? WHERE {condition}"
-        cursor.execute(sql, (new_value,))
+        cursor.execute(sql, new_values)
         conn.commit()
     except pyodbc.Error as e:
         print(e)
     finally:
         cursor.close()
+        conn.close()
 
-def get_table_data(conn_string, table_name:str):
+def get_table_data(sql:str):
     """ get data from a table in the database """
     try:
-        conn=_create_connection(conn_string)
+        conn=_create_connection()
         if conn is None:
             raise Exception("Connection to the database failed.")
         cursor = conn.cursor()
-        sql = f"SELECT * FROM {table_name}"
         cursor.execute(sql)
         rows = cursor.fetchall()
 
@@ -47,17 +47,32 @@ def get_table_data(conn_string, table_name:str):
         employees=[]
     finally:
         cursor.close()
+        conn.close()
         return employees
 
-def get_user_data(conn, table_name:str, condition:str):
+def get_user_data(sql:str):
     """ get data from a table in the database """
     try:
+        conn=_create_connection()
         cursor = conn.cursor()
-        sql = f"SELECT * FROM {table_name} WHERE {condition}"
         cursor.execute(sql)
         rows = cursor.fetchall()
     except pyodbc.Error as e:
         print(e)
     finally:
         cursor.close()
+        conn.close()
         return rows
+
+def insert_table(sql:str):
+    """ insert data into a table in the database """
+    try:
+        conn=_create_connection()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+    except pyodbc.Error as e:
+        print(e)
+    finally:
+        cursor.close()
+        conn.close()
