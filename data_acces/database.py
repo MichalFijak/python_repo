@@ -3,7 +3,8 @@ import pyodbc
 from models.employee import Employee
 
 def _create_connection():
-    with open('python_repo\enviroment\enviroment.json', 'r', encoding='utf-8') as file:
+    with open('enviroment\enviroment.json', 'r', encoding='utf-8') as file:
+        #there's need to change the path to enviroment.json file due to mismatch on local paths
         db_parameters = json.load(file)
     conn = None
     connection_string = f"""DRIVER={db_parameters['DRIVER']};SERVER={db_parameters['SERVER']};
