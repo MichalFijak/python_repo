@@ -76,3 +76,11 @@ def insert_table(sql:str):
     finally:
         cursor.close()
         conn.close()
+
+#stworz wiecej rekodow w bazie danych, ktore bedzie mozna uzyc
+#jako dane do statystki, regresji, bledu itp.
+#uzytkownik powinine miec mozliowsc wyboru czy woli obrobic dane, czy tez wykonac operacje na bazie danych
+#uzytkownik powininen miec mozliwosc uzyskania tych danych w postaci (np excela)
+#cala ta logika powinna zostac przeniesiona do osobnej klasy, ktora bedzie odpowiedzialna za
+#statystyki i regresje
+#dobrze byloby stworzyc jakies wykresy, ktore pokaza regresje i bledy
